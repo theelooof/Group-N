@@ -80,7 +80,7 @@ class MillBoard:
         node.player = player
 
 
-    def move_player(self, start_id: str, target_id: str):
+    def move_player_phase_two(self, start_id: str, target_id: str):
         start_id = ID_MAPPING.get(start_id.upper(), None)
         target_id = ID_MAPPING.get(target_id.upper(), None)
         # Check, if IDs are in the accepted area
@@ -104,7 +104,19 @@ class MillBoard:
         
         # marks StartNode as unoccupied 
         start_node.player = None
-        start_node.occupied = False      
+        start_node.occupied = False 
+    
+    def move_player_phase_one(self, move: str, player: str):
+        move = ID_MAPPING.get(move.upper(), None)
+        if self.node[move].occupied:
+            raise ValueError(f"Node with ID {move} is already occupied.")
+        self.node[move].player = player
+        self.node[move].occupied = True
+        
+
+    #TODO: Check if Mill is formed and remove a stone of the opponent
+        
+    # TODO: Check if Player has only 3 stones left and can move to any free space     
 
 board = MillBoard()
 
@@ -149,7 +161,7 @@ def draw_millboard(board:MillBoard ):
     
     print('\n'.join(board))
 
-
+'''
 board.occupy_node("A1","X")
 board.move_player("A1","A4")
 board.occupy_node("A7","O")
@@ -157,5 +169,5 @@ board.move_player("A7","D5")
 draw_millboard(board)
 board.occupy_node("D1","X")
 board.occupy_node("E5","O")
-draw_millboard(board)
+draw_millboard(board)'''
 
