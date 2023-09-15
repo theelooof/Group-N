@@ -20,11 +20,13 @@ class Game:
                     #TODO: Check if the move is valid and apply it to the board
                     if True:
                         self.board.move_player_phase_two(start_position, end_position)
+                        self.gameOver = self.board.check_for_mill(move)
                         return
                     else:
                         print("Invalid move. Try again.")
                 elif len(move) == 2:
                     self.board.move_player_phase_one(move, self.players[self.turn % 2])
+                    self.gameOver = self.board.check_for_mill(move)
                     return
                 else:
                     print("Invalid input format. Use 'A1 B2' format.")

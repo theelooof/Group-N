@@ -11,7 +11,7 @@ class Node:
         self.down = None
 
     def __repr__(self):
-        return f'Node(id={self.id}, occupied={self.occupied}, player={self.player})'
+        return f'Node(id={self.id}, occupied={self.occupied}, player={self.player}'
 
 class MillBoard:
     global ID_MAPPING 
@@ -112,6 +112,39 @@ class MillBoard:
             raise ValueError(f"Node with ID {move} is already occupied.")
         self.node[move].player = player
         self.node[move].occupied = True
+    # helper function to look in all directions
+    def check_muehle_in_direction(self, node, primary_dir, secondary_dir):
+        primary_node = getattr(node, primary_dir)
+        
+        if(primary_node==None):
+           return False
+        if(primary_dir== secondary_dir):
+            secondary_node = getattr(primary_node, secondary_dir) 
+        else:
+            secondary_node = getattr(node, secondary_dir) 
+        if(secondary_node ==None):
+           return False
+        
+        
+        nodes = [n for n in [node, primary_node, secondary_node] if n]
+        if len(nodes) != 3:
+            return False
+        if all(n.occupied for n in nodes) and len(set(n.player for n in nodes)) == 1:
+            return True 
+        return False
+    # checks mill
+    def check_for_mill(self, position):
+        node = self.node[ID_MAPPING.get(position.upper(), None)]
+        
+        vertical_muehle = (self.check_muehle_in_direction(node, "up", "up") or 
+                           self.check_muehle_in_direction(node, "up", "down") or 
+                           self.check_muehle_in_direction(node, "down", "down"))
+        
+        horizontal_muehle = (self.check_muehle_in_direction(node, "left", "left") or 
+                             self.check_muehle_in_direction(node, "left", "right") or 
+                             self.check_muehle_in_direction(node, "right", "right"))
+        
+        return vertical_muehle or horizontal_muehle
         
 
     #TODO: Check if Mill is formed and remove a stone of the opponent
@@ -160,7 +193,8 @@ def draw_millboard(board:MillBoard ):
     ]
     
     print('\n'.join(board))
-
+    
+    
 '''
 board.occupy_node("A1","X")
 board.move_player("A1","A4")
