@@ -161,34 +161,37 @@ def draw_millboard(board:MillBoard ):
 
         
     # Parts of the Board
-    number_line =        f'   1──2──3─4─5──6──7'   
-    upper_first_line =  f'A  {A}───────{B}───────{C}'
-    inner_lines_1 =     f'   │       │       │'
-    upper_second_line = f'B  │  {D}────{E}────{F}  │'
-    inner_lines_2 =     f'   │  │    │    │  │'
-    inner_third_line =  f'C  │  │  {G}─{H}─{I}  │  │'
-    inner_lines_3 =     f'   │  │  │   │  │  │'
-    middle_line =       f'D  {J}──{K}──{L}   {M}──{N}──{O}'
-    lower_third_line =  f'E  │  │  {P}─{Q}─{R}  │  │'
-    lower_second_line = f'F  │  {S}────{T}────{U}  │'
-    lower_first_line =  f'G  {V}───────{W}───────{X }'
+    number_line =       f'   1──2──3─4─5──6──7'             + f'   Phase 1'
+    upper_first_line =  f'A  {A}───────{B}───────{C}'       + f'   The board starts in an empty state. The players take turns to fill the vacant intersections with their respective pieces.'
+    inner_lines_11 =    f'   │       │       │'             + f'   Each player has nine pieces each. Black begins.'
+    upper_second_line = f'B  │  {D}────{E}────{F}  │'       + f'   -------------------------------------------------'
+    inner_lines_21 =    f'   │  │    │    │  │'            
+    inner_third_line =  f'C  │  │  {G}─{H}─{I}  │  │'       + f'   In Phase 2, the players take turns to move their pieces to adjacent vacant intersections'
+    inner_lines_31 =    f'   │  │  │   │  │  │'             + f'   -------------------------------------------------'
+    middle_line =       f'D  {J}──{K}──{L}   {M}──{N}──{O}' + f'   Phase 3: '
+    inner_lines_32 =    f'   │  │  │   │  │  │'             + f'   Phase 3 begins when one of the players has 3 pieces left. ' 
+    lower_third_line =  f'E  │  │  {P}─{Q}─{R}  │  │'       + f'   Here the player is allowed to move their pieces to any vacant intersection.'
+    inner_lines_22 =    f'   │  │    │    │  │'             + f'   -------------------------------------------------'
+    lower_second_line = f'F  │  {S}────{T}────{U}  │'       
+    inner_lines_12 =    f'   │       │       │' 
+    lower_first_line =  f'G  {V}───────{W}───────{X }'      
     
 
     # Assembly of the Boards
     board = [
         number_line,
         upper_first_line,
-        inner_lines_1,
+        inner_lines_11,
         upper_second_line,
-        inner_lines_2,
+        inner_lines_21,
         inner_third_line,
-        inner_lines_3,
+        inner_lines_31,
         middle_line,
-        inner_lines_3,
+        inner_lines_32,
         lower_third_line,
-        inner_lines_2,
+        inner_lines_22,
         lower_second_line,
-        inner_lines_1,
+        inner_lines_12,
         lower_first_line
     ]
     
