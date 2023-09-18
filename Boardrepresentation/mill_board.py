@@ -161,21 +161,21 @@ def draw_millboard(board:MillBoard ):
 
         
     # Parts of the Board
-    number_line =       f'   1──2──3─4─5──6──7'             + f'   Phase 1'
-    upper_first_line =  f'A  {A}───────{B}───────{C}'       + f'   The board starts in an empty state. The players take turns to fill the vacant intersections with their respective pieces.'
-    inner_lines_11 =    f'   │       │       │'             + f'   Each player has nine pieces each. Black begins.'
-    upper_second_line = f'B  │  {D}────{E}────{F}  │'       + f'   -------------------------------------------------'
-    inner_lines_21 =    f'   │  │    │    │  │'            
-    inner_third_line =  f'C  │  │  {G}─{H}─{I}  │  │'       + f'   In Phase 2, the players take turns to move their pieces to adjacent vacant intersections'
-    inner_lines_31 =    f'   │  │  │   │  │  │'             + f'   -------------------------------------------------'
-    middle_line =       f'D  {J}──{K}──{L}   {M}──{N}──{O}' + f'   Phase 3: '
-    inner_lines_32 =    f'   │  │  │   │  │  │'             + f'   Phase 3 begins when one of the players has 3 pieces left. ' 
-    lower_third_line =  f'E  │  │  {P}─{Q}─{R}  │  │'       + f'   Here the player is allowed to move their pieces to any vacant intersection.'
-    inner_lines_22 =    f'   │  │    │    │  │'             + f'   -------------------------------------------------'
-    lower_second_line = f'F  │  {S}────{T}────{U}  │'       
-    inner_lines_12 =    f'   │       │       │' 
-    lower_first_line =  f'G  {V}───────{W}───────{X }'      
-    
+    number_line =       f'   1──2──3─4─5──6──7'             + f'    |-----------------------------------------------------------------------------'
+    upper_first_line =  f'A  {A}───────{B}───────{C}'       + f'    | The objective of the board game is to perform mills, which is done by'
+    inner_lines_11 =    f'   │       │       │'             + f'    | aligning 3 of your pieces in a vertical or horizontal line. When a mill'
+    upper_second_line = f'B  │  {D}────{E}────{F}  │'       + f'    | is formed, the player is allowed to remove one of the other players pieces  '
+    inner_lines_21 =    f'   │  │    │    │  │'             + f'    | that is not placed in a mill. An opponent’s piece that is part of a mill'
+    inner_third_line =  f'C  │  │  {G}─{H}─{I}  │  │'       + f'    | can only be removed if there is no other piece available on the board. '
+    inner_lines_31 =    f'   │  │  │   │  │  │'             + f'    | '
+    middle_line =       f'D  {J}──{K}──{L}   {M}──{N}──{O}' + f'    | Phase 1: The players take turns to fill the vacant intersections with their '
+    inner_lines_32 =    f'   │  │  │   │  │  │'             + f'    |          respective nine pieces. X begins.'
+    lower_third_line =  f'E  │  │  {P}─{Q}─{R}  │  │'       + f'    | Phase 2: The players take turns to move their pieces to adjacent vacant  '
+    inner_lines_22 =    f'   │  │    │    │  │'             + f'    |          intersections trying to form mills and removing the opponent’s pieces.'
+    lower_second_line = f'F  │  {S}────{T}────{U}  │'       + f'    | Phase 3: Phase 3 begins when one of the players has 3 pieces left. '
+    inner_lines_12 =    f'   │       │       │'             + f'    |          Here the player is allowed to move their pieces to any vacant '
+    lower_first_line =  f'G  {V}───────{W}───────{X }'      + f'    |          intersection.'
+    end_line = f'                   '                       +f'     |-------------------------------------------------------------------------------'
 
     # Assembly of the Boards
     board = [
@@ -192,7 +192,8 @@ def draw_millboard(board:MillBoard ):
         inner_lines_22,
         lower_second_line,
         inner_lines_12,
-        lower_first_line
+        lower_first_line,
+        end_line
     ]
     
     print('\n'.join(board))
