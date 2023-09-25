@@ -18,7 +18,7 @@ class Game:
         while True:
             try:
                 
-                if self.turn>17:
+                if self.turn>18:
                     move1 = input("Choose the piece you want to move (e.g., 'A1'): ").strip().upper()
                     if(move1=="undo"):
                         return
