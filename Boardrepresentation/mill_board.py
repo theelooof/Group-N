@@ -17,11 +17,12 @@ class Node:
 
 class MillBoard:
     global ID_MAPPING 
+    
 
     def __init__(self):
         self.node = [Node(i) for i in range(24)]
         self.set_neighbors()
-
+     
     def set_neighbors(self):
         neighbors = {
             0: {"right": 1, "down": 9},
@@ -67,7 +68,7 @@ class MillBoard:
     def occupy_node(self, id_map: str, player: str):
         
         # Check, if id lies in the valid area 
-        id = ID_MAPPING.get(id_map.upper(), None)
+        id = map_node_to_text(str)
         if id ==None:
             raise ValueError(f"{id_map} is no valid Value")
         
@@ -82,36 +83,19 @@ class MillBoard:
         node.player = player
 
 
-    def move_player_phase_two(self, start_id: str, target_id: str):
-        start_id = ID_MAPPING.get(start_id.upper(), None)
-        target_id = ID_MAPPING.get(target_id.upper(), None)
-        # Check, if IDs are in the accepted area
-        if start_id ==None:
-            raise ValueError("Must be a valid id")
-        if target_id ==None:
-            raise ValueError("Must be a valid id")
-        
-        start_node = self.node[start_id] 
-        target_node = self.node[target_id]
-        
-        # Check, if of StartNode is occupied and of TargetNode is not occupied
-        if not start_node.occupied:
-            raise ValueError(f"StartNode with ID {start_id} is not occupied.")
-        if target_node.occupied:
-            raise ValueError(f"TargetNode with ID {target_id} is already occupied.")
-        
+    def move_player_phase_two(self, start_id: str, target_id: str,player: str):
+        start_id = map_node_to_text(start_id)
+        target_id = map_node_to_text(target_id)     
+   
         # Player moves StartNode to the TargetNode
-        target_node.player = start_node.player
-        target_node.occupied = True
-        
+        self.node[target_id].player = player
+        self.node[target_id].occupied = True
         # marks StartNode as unoccupied 
-        start_node.player = None
-        start_node.occupied = False 
+        self.node[start_id].player = None
+        self.node[start_id].occupied = False
     
     def move_player_phase_one(self, move: str, player: str):
-        move = ID_MAPPING.get(move.upper(), None)
-        if self.node[move].occupied:
-            raise ValueError(f"Node with ID {move} is already occupied.")
+        move = map_node_to_text(move) 
         self.node[move].player = player
         self.node[move].occupied = True
     # helper function to look in all directions
@@ -136,7 +120,8 @@ class MillBoard:
         return None
     # checks mill
     def check_for_mill(self, position):
-        node = self.node[ID_MAPPING.get(position.upper(), None)]
+        node_id=map_node_to_text(position)
+        node = self.node[node_id]
         
         vertical_muehle = (self.check_muehle_in_direction(node, "up", "up") or 
                            self.check_muehle_in_direction(node, "up", "down") or 
@@ -151,11 +136,44 @@ class MillBoard:
             return horizontal_muehle
         return None
     
-
+    def is_valid_move_phase_two(self,input_position,player):
+        if input_position in ID_MAPPING:
+            node_id = map_node_to_text(input_position)
+            node = self.node[node_id]
+            
+            # Überprüfe, ob der Knoten bereits belegt ist
+            if  node.occupied:
+                if(self.turn>17):  
+                    if(player==node.player):
+                        return True
+                    else:
+                        print("The select piece doesn't belong to the current player")
+                        return False
+            else:
+                print(f"The position {input_position} is not occupied.")
+            return False
+    def is_valid_move_phase_two_second(self,start_id, target_id):
+        # Überprüfe, ob die Eingabe im ID_MAPPING ist
+        
+        if  target_id in ID_MAPPING:
+            node_id = map_node_to_text(target_id)
+            node = self.node[node_id]
+            possible_moves=self.get_next_possible_moves(start_id)
+            # Überprüfe, ob der Knoten bereits belegt ist
+            if not node.occupied:
+                if(not target_id in possible_moves):
+                   print(f"You can only move between adjacent nodes.") 
+                   return False
+                return True
+            else:
+                print(f"The position {target_id} is already occupied.")
+        else:
+            print(f"Invalid input: {target_id} is not a valid position.")  
+        return False       
     def is_valid_move(self,input_position):
         # Überprüfe, ob die Eingabe im ID_MAPPING ist
         if input_position in ID_MAPPING:
-            node_id = ID_MAPPING[input_position]
+            node_id = map_node_to_text(input_position)
             node = self.node[node_id]
             
             # Überprüfe, ob der Knoten bereits belegt ist
@@ -170,7 +188,7 @@ class MillBoard:
     def get_next_possible_moves(self,input_move):
         # Check if the input move is in ID_MAPPING
         if input_move in ID_MAPPING:
-            node_id = ID_MAPPING[input_move]
+            node_id = map_node_to_text(input_move)
             current_node = self.node[node_id]
 
             # Create a list to store the next possible moves
@@ -180,9 +198,7 @@ class MillBoard:
             neighbors = [current_node.left, current_node.right, current_node.up, current_node.down]
             for neighbor_node in neighbors:
                 if neighbor_node is not None and not neighbor_node.occupied:
-                    # Find the position associated with the neighbor_node
-                    for position, node_id in ID_MAPPING.items():
-                            next_possible_moves.append(position)
+                            next_possible_moves.append(map_text_to_node(neighbor_node.id))
 
             # Convert the list of possible moves to a comma-separated string
             next_moves_text = ", ".join(next_possible_moves)
@@ -214,7 +230,7 @@ class MillBoard:
 
 board = MillBoard()
 
-def draw_millboard(self,board:MillBoard ):
+def draw_millboard(self,board:MillBoard):
     global A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X
     letter = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X"]
     for i, letter in enumerate(letter):
@@ -237,7 +253,7 @@ def draw_millboard(self,board:MillBoard ):
     inner_lines_12 =    f'   │       │       │'             + f'    |          Here the player is allowed to move their pieces to any vacant '
     lower_first_line =  f'G  {V}───────{W}───────{X }'      + f'    |          intersection.'
     end_line =          f'                    '             + f'    |-------------------------------------------------------------------------------'
-    round_line=          f'Player:{self.players[self.turn % 2]} Pieces:{self.pieces[self.turn % 2]} Round:{self.turn}'
+    round_line=          f'Player:{self.players[(self.turn+1) % 2]} Pieces:{self.pieces[self.turn % 2]} Round:{self.turn}'
     exit_line=f'Enter "exit" to exit the game'
     # Assembly of the Boards
     board = [
@@ -263,12 +279,21 @@ def draw_millboard(self,board:MillBoard ):
     print('\n'.join(board))
     
 def announce_winner(self):
-    text=[player_1_winner_text,player_2_winner_text]
-    winner_text=text[(self.turn +1) % 2]
-    print('\n'.join(winner_text))
+    if(self.turn>299):
+      print('\n'.join(draw_text)) 
+    if(self.pieces[self.turn % 2]<3):
+      text=[player_1_winner_text,player_2_winner_text]
+      winner_text=text[(self.turn+1)  % 2]
+      print('\n'.join(winner_text))
+      
+def map_text_to_node(id): 
+    for key, value in ID_MAPPING.items():
+        if value == id:
+            return key    
 
 
-
+def map_node_to_text(str):
+    return ID_MAPPING.get(str.upper(), None)
 player1_1=     f'  _____  _                         __  __          ___              '         
 player1_2=     f' |  __ \| |                       /_ | \ \        / (_)             '
 player1_3=     f' | |__) | | __ _ _   _  ___ _ __   | |  \ \  /\  / / _ _ __  ___    ' 
@@ -307,4 +332,20 @@ player_2_winner_text=[
     player2_6,
     player2_7,
     player2_8
+]
+
+draw1=f'  _____                         '
+draw2=f' |  __ \                        '
+draw3=f' | |  | |_ __ __ ___      __    '
+draw4=f' | |  | | |__/ _` \ \ /\ / /    '
+draw5=f' | |__| | | | (_| |\ V  V /     '
+draw6=f' |_____/|_|  \__,_| \_/\_/      '
+
+draw_text=[
+    draw1,
+    draw2,
+    draw3,
+    draw4,
+    draw5,
+    draw6
 ]
