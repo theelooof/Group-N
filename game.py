@@ -16,8 +16,19 @@ class Game:
     def input_move(self):
         while True:
             try:
+                if self.pieces[0]==3 or self.pieces[1]==3:
+                    move1 = input("Choose the piece you want to move (e.g., 'A1'): ").strip().upper()
+                    move2 = input("Choose the position you want to move the piece to (e.g., 'A4'): ").strip().upper()
+                    if(move1=="EXIT" or move2=="EXIT"):
+                        self.gameOver=True
+                        return
+                    
+                    self.board.move_player_phase_three(move1, move2,self.players[self.turn % 2])
+                    self.last_move=move2
+
+                    return
                 
-                if self.turn>18:
+                elif self.turn>18:
                     move1 = input("Choose the piece you want to move (e.g., 'A1'): ").strip().upper()
                     if(move1=="undo"):
                         return
@@ -49,6 +60,7 @@ class Game:
                     self.board.move_player_phase_two(move1, move2,self.players[self.turn % 2])
                     self.last_move=move2
                     return
+                
                 else:
                     move0 = input("Enter your move (e.g., 'A1, A4,...'): ").strip().upper()
                     if(move0=="EXIT"):

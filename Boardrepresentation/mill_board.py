@@ -1,3 +1,4 @@
+import math
 
 # Node class for each playable field 
 class Node:
@@ -82,6 +83,19 @@ class MillBoard:
         node.occupied = True
         node.player = player
 
+    def move_player_phase_three(self, start_id: str, target_id: str, player: str):
+        start_id = map_node_to_text(start_id)
+        target_id = map_node_to_text(target_id)
+
+        if self.node[target_id].occupied:
+            return False
+        
+        # Player moves StartNode to the TargetNode
+        self.node[target_id].player = player
+        self.node[target_id].occupied = True
+        # marks StartNode as unoccupied 
+        self.node[start_id].player = None
+        self.node[start_id].occupied = False
 
     def move_player_phase_two(self, start_id: str, target_id: str,player: str):
         start_id = map_node_to_text(start_id)
@@ -136,6 +150,30 @@ class MillBoard:
             return horizontal_muehle
         return None
     
+    def is_valid_move_phase_three(self,positions,player):
+        if positions[0] in ID_MAPPING:
+            node_id = map_node_to_text(positions)
+            node = self.node[node_id]
+
+            if  node.occupied:
+                if(player==node.player):
+                    return True
+                else:
+                    print("The starting piece doesn't belong to the current player")
+                    return False
+            else:
+                print(f"The starting position {positions[0]} is not occupied.")
+            return False
+        
+        if positions[1] in ID_MAPPING:
+            node_id = map_node_to_text(positions)
+            node = self.node[node_id]
+            if not node.occupied:
+                return True
+            else:
+                print(f"The target position {positions[1]} is already occupied.")
+            return False
+
     def is_valid_move_phase_two(self,input_position,player):
         if input_position in ID_MAPPING:
             node_id = map_node_to_text(input_position)
@@ -253,7 +291,7 @@ def draw_millboard(self,board:MillBoard):
     inner_lines_12 =    f'   │       │       │'             + f'    |          Here the player is allowed to move their pieces to any vacant '
     lower_first_line =  f'G  {V}───────{W}───────{X }'      + f'    |          intersection.'
     end_line =          f'                    '             + f'    |-------------------------------------------------------------------------------'
-    round_line=          f'Player:{self.players[(self.turn+1) % 2]} Pieces:{self.pieces[self.turn % 2]} Round:{self.turn}'
+    round_line=          f'Player:{self.players[(self.turn+1) % 2]} Pieces:{self.pieces[self.turn % 2] - math.floor(self.turn/2)} Round:{self.turn}'
     exit_line=f'Enter "exit" to exit the game'
     # Assembly of the Boards
     board = [
