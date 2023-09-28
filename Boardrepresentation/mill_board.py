@@ -106,17 +106,16 @@ class MillBoard:
         start_node.player = None
         start_node.occupied = False 
     
-    def move_player_phase_one(self, move: str, player: str):
-        move = ID_MAPPING.get(move.upper(), None)
-        if self.node[move].occupied:
-            raise ValueError(f"Node with ID {move} is already occupied.")
-        self.node[move].player = player
-        self.node[move].occupied = True
+    def move_player_phase_one(self, input_move: str, player: str):
+        parsed_move = ID_MAPPING.get(input_move.upper(), None)
+        if self.node[parsed_move].occupied:
+            raise ValueError(f"Node with ID {input_move} is already occupied.")
+        self.occupy_node(input_move, player)
         
 
     #TODO: Check if Mill is formed and remove a stone of the opponent
-        
-    # TODO: Check if Player has only 3 stones left and can move to any free space     
+    
+    #TODO: Check if Player has only 3 stones left and can move to any free space     
 
 board = MillBoard()
 

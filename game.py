@@ -7,9 +7,12 @@ class Game:
         self.gameOver = False
         self.turn = 0
         self.players = ["X", "O"]
+
+    #TODO: Check if move is legal
+    def check_move(self, move):
+        return True
     
     #Input moves for the game
-    
     def input_move(self):
         while True:
             try:
@@ -17,8 +20,7 @@ class Game:
                 if len(move) == 5 and move[2] == ' ':
                     start_position = move[:2]
                     end_position = move[3:]
-                    #TODO: Check if the move is valid and apply it to the board
-                    if True:
+                    if check_move(move):
                         self.board.move_player_phase_two(start_position, end_position)
                         return
                     else:
@@ -34,9 +36,14 @@ class Game:
 
     #Game loop
     def game_loop(self):
+
+        #TODO: Print rules
+
         while not self.gameOver:
             draw_millboard(self.board)
             self.input_move()
             self.turn += 1
+
+            
 
 
