@@ -8,7 +8,7 @@ class Game:
         self.board = MillBoard()
         self.gameOver = False
         self.turn = 0
-        self.players = ["X", "O"]
+        self.players = ["O", "X"]
         self.pieces=[9,9]
         self.pieces_on_board=[0,0]
         self.last_move=None
@@ -31,6 +31,7 @@ class Game:
                             self.gameOver=True
                             return
                     self.board.move_player_phase_three(move1, move2, self.players[self.turn % 2])
+                    self.last_move=move2
                     return
                 
                 elif self.turn>18:
