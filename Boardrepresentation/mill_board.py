@@ -152,7 +152,7 @@ class MillBoard:
     
     def is_valid_move_phase_three(self,positions,player):
         if positions[0] in ID_MAPPING:
-            node_id = map_node_to_text(positions)
+            node_id = map_node_to_text(positions[0])
             node = self.node[node_id]
 
             if  node.occupied:
@@ -291,7 +291,7 @@ def draw_millboard(self,board:MillBoard):
     inner_lines_12 =    f'   │       │       │'             + f'    |          Here the player is allowed to move their pieces to any vacant '
     lower_first_line =  f'G  {V}───────{W}───────{X }'      + f'    |          intersection.'
     end_line =          f'                    '             + f'    |-------------------------------------------------------------------------------'
-    round_line=          f'Player:{self.players[(self.turn+1) % 2]} Pieces:{self.pieces[self.turn % 2] - math.floor(self.turn/2)} Round:{self.turn}'
+    round_line=          f'Player:{self.players[(self.turn+1) % 2]} Pieces:{self.pieces[self.turn % 2]} Round:{self.turn}'
     exit_line=f'Enter "exit" to exit the game'
     # Assembly of the Boards
     board = [
@@ -319,7 +319,7 @@ def draw_millboard(self,board:MillBoard):
 def announce_winner(self):
     if(self.turn>299):
       print('\n'.join(draw_text)) 
-    if(self.pieces[self.turn % 2]<3):
+    if((self.pieces_on_board[self.turn % 2]<3) and self.turn>18):
       text=[player_1_winner_text,player_2_winner_text]
       winner_text=text[(self.turn+1)  % 2]
       print('\n'.join(winner_text))

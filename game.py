@@ -10,22 +10,27 @@ class Game:
         self.turn = 0
         self.players = ["X", "O"]
         self.pieces=[9,9]
+        self.pieces_on_board=[0,0]
         self.last_move=None
     
     #Input moves for the game
     def input_move(self):
         while True:
             try:
-                if self.pieces[0]==3 or self.pieces[1]==3:
+                #TODO: Wrong condition
+                if (self.pieces_on_board[0]==3 or self.pieces_on_board[1]==3) and self.turn>18:
                     move1 = input("Choose the piece you want to move (e.g., 'A1'): ").strip().upper()
                     move2 = input("Choose the position you want to move the piece to (e.g., 'A4'): ").strip().upper()
                     if(move1=="EXIT" or move2=="EXIT"):
                         self.gameOver=True
                         return
-                    
-                    self.board.move_player_phase_three(move1, move2,self.players[self.turn % 2])
-                    self.last_move=move2
-
+                    while(not(self.board.is_valid_move_phase_three([move1, move2], self.players[self.turn % 2] ))):
+                        move1 = input("Choose the piece you want to move (e.g., 'A1'): ").strip().upper()
+                        move2 = input("Choose the position you want to move the piece to (e.g., 'A4'): ").strip().upper()
+                        if(move1=="EXIT" or move2=="EXIT"):
+                            self.gameOver=True
+                            return
+                    self.board.move_player_phase_three(move1, move2, self.players[self.turn % 2])
                     return
                 
                 elif self.turn>18:
@@ -73,6 +78,8 @@ class Game:
                             return
                     self.board.move_player_phase_one(move0, self.players[self.turn % 2])
                     self.last_move=move0
+                    self.pieces[(self.turn + 1) % 2]-=1
+                    self.pieces_on_board[self.turn % 2]+=1
                     return
                     
             except KeyboardInterrupt:
@@ -92,18 +99,18 @@ class Game:
             while(mill):
                 remove_piece = input("Enter the position of the piece that you want to remove: ").strip().upper()
                 mill=not(self.board.remove_player(remove_piece,self.players[(self.turn) % 2]))
-                self.pieces[self.turn % 2]-=1
                 if(remove_piece=="EXIT"):
                     self.gameOver=True
                     return
+                self.pieces_on_board[(self.turn) % 2]-=1
             return
     def restart(self):
-        if(self.gameOver or self.turn>299 or self.pieces[(self.turn-1) % 2]<3):
-            restar_text = input("\n Do you want to pkay again yes/no \n").strip().upper()
+        if(self.gameOver or self.turn>299 or (self.pieces_on_board[(self.turn-1) % 2]<3 and self.turn>18)):
+            restar_text = input("\n Do you want to play again yes/no \n").strip().upper()
             if(restar_text=="YES"):
                 self.board= MillBoard()
                 self.gameOver = False
-                self.turn = 0
+                self.turn = 1
                 self.pieces=[9,9]
             if(restar_text=="NO"):
                 self.gameOver=True
