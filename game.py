@@ -18,7 +18,7 @@ class Game:
         while True:
             try:
                 #TODO: Wrong condition
-                phase_two=8
+                phase_two=18
                 
                 if (self.pieces_on_board[0]==3 or self.pieces_on_board[1]==3) and self.turn>phase_two:
                     move1 = input("Choose the piece you want to move (e.g., 'A1'): ").strip().upper()
