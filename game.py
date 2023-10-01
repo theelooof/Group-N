@@ -86,7 +86,6 @@ class Game:
                     self.board.move_player_phase_one(move0, self.players[self.turn % 2])
                     self.last_move=move0
                     self.pieces[(self.turn + 1) % 2]-=1
-                    self.pieces_on_board[self.turn % 2]+=1
                     return
                     
             except KeyboardInterrupt:
@@ -112,15 +111,17 @@ class Game:
                 self.pieces_on_board[(self.turn) % 2]-=1
             return
     def restart(self):
-        if(self.gameOver or self.turn>299 or (self.pieces_on_board[(self.turn-1) % 2]<3 and self.turn>18)):
+        if(self.gameOver or self.turn>299 or self.pieces_on_board[(self.turn-1) % 2]<3 or self.turn>18 or self.pieces_on_board[self.turn % 2]<3 ):
             restar_text = input("\n Do you want to play again yes/no \n").strip().upper()
-            while(restar_text!="YES"or restar_text!="NO"):
+            while(restar_text!="YES" and restar_text!="NO"):
                 restar_text = input("\n Do you want to play again yes/no \n").strip().upper()
             if(restar_text=="YES"):
                 self.board= MillBoard()
                 self.gameOver = False
-                self.turn = 1
+                self.turn = 0
                 self.pieces=[9,9]
+                self.pieces_on_board=[9,9]
+                self.last_move=None
             if(restar_text=="NO"):
                 self.gameOver=True
 
@@ -128,6 +129,7 @@ class Game:
         self.board.player=self.players
         self.board.turn=self.turn
         self.board.pieces=self.pieces
+        self.board.pieces_on_board=self.pieces_on_board
     #Game loop
     def game_loop(self):
 
@@ -142,6 +144,7 @@ class Game:
                self.input_move()
                self.mill()
                draw_millboard(self,self.board)
+            self.input_game_info()
             announce_winner(self) 
             self.turn += 1
 
