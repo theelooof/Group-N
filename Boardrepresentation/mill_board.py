@@ -22,6 +22,8 @@ class MillBoard:
 
     def __init__(self):
         self.node = [Node(i) for i in range(24)]
+        for i in range(24):
+            self.node[i].id=i
         self.set_neighbors()
      
     def set_neighbors(self):
@@ -181,7 +183,7 @@ class MillBoard:
             
             # Überprüfe, ob der Knoten bereits belegt ist
             if  node.occupied:
-                if(self.turn>17):  
+                if(self.turn>18):  
                     if(player==node.player):
                         return True
                     else:
@@ -249,6 +251,25 @@ class MillBoard:
 
     def remove_player(self, position: str, player: str):
         node_id = ID_MAPPING.get(position.upper(), None)
+        if(node_id==None):
+            print(f"Invalid input: {position} is not a valid position.")
+            return False
+        already_existing_mill=[]
+        is_in_mill = self.check_for_mill(position)
+        if(is_in_mill!=None):
+            for node in self.node:
+                if(node.player!=player and (node.player=="O" or node.player=="X")): 
+                    pos = map_text_to_node(node.id)
+                    is_in_mill = self.check_for_mill(pos)
+                    if(is_in_mill==None):
+                        already_existing_mill.append(False)
+                    else:
+                        already_existing_mill.append(True)
+        
+        if(not(all(already_existing_mill))):
+            print(f"You can't remove mill pieces as long as there are other free pieces left")
+            return False
+        
         if node_id is None:
             print(f"Invalid position: {position} is not a valid position.")
             return False
@@ -319,7 +340,7 @@ def draw_millboard(self,board:MillBoard):
 def announce_winner(self):
     if(self.turn>299):
       print('\n'.join(draw_text)) 
-    if((self.pieces_on_board[self.turn % 2]<3) and self.turn>18):
+    if(self.pieces_on_board[self.turn % 2]<3 or self.pieces_on_board[(self.turn -1) % 2]<3):
       text=[player_1_winner_text,player_2_winner_text]
       winner_text=text[(self.turn+1)  % 2]
       print('\n'.join(winner_text))
