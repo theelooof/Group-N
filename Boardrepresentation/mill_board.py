@@ -36,7 +36,7 @@ class MillBoard:
             5: {"left": 4, "down": 13},
             6: {"right": 7, "down": 11},
             7: {"left": 6, "right": 8, "up": 4},
-            8: {"left": 7, "up": 11},
+            8: {"left": 7, "down": 12},
             9: {"right": 10, "up": 0, "down": 21},
             10: {"left": 9, "right": 11, "up": 3, "down": 18},
             11: {"left": 10, "up": 6, "down": 15},
