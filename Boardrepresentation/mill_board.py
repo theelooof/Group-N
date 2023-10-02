@@ -137,6 +137,8 @@ class MillBoard:
     # checks mill
     def check_for_mill(self, position):
         node_id=map_node_to_text(position)
+        if(node_id==None):
+            return None
         node = self.node[node_id]
         
         vertical_muehle = (self.check_muehle_in_direction(node, "up", "up") or 
@@ -183,7 +185,7 @@ class MillBoard:
             
             # Überprüfe, ob der Knoten bereits belegt ist
             if  node.occupied:
-                if(self.turn>18):  
+                if(self.turn>17):  
                     if(player==node.player):
                         return True
                     else:

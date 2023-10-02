@@ -18,7 +18,7 @@ class Game:
         while True:
             try:
                 #TODO: Wrong condition
-                phase_two=18
+                phase_two=17
                 
                 if (self.pieces_on_board[0]==3 or self.pieces_on_board[1]==3) and self.turn>phase_two:
                     move1 = input("Choose the piece you want to move (e.g., 'A1'): ").strip().upper()
@@ -29,11 +29,12 @@ class Game:
                     while(not(self.board.is_valid_move_phase_three([move1, move2], self.players[self.turn % 2] ))):
                         move1 = input("Choose the piece you want to move (e.g., 'A1'): ").strip().upper()
                         move2 = input("Choose the position you want to move the piece to (e.g., 'A4'): ").strip().upper()
+                        self.last_move=move2
                         if(move1=="EXIT" or move2=="EXIT"):
                             self.gameOver=True
                             return
                     self.board.move_player_phase_three(move1, move2, self.players[self.turn % 2])
-                    self.last_move=move2
+                    
                     return
                 elif self.turn>phase_two:
                     move1 = input("Choose the piece you want to move (e.g., 'A1'): ").strip().upper()
@@ -64,17 +65,19 @@ class Game:
                         return
                     while(not(self.board.is_valid_move_phase_two_second(move1,move2))):
                         move2 = input("Choose the position you want to move it to (e.g., 'A4'): ").strip().upper()
+                        self.last_move=move2
                         if(move2=="EXIT"):
                             self.gameOver=True
                             return
                     #TODO: Check if the move is valid and apply it to the board
                     
                     self.board.move_player_phase_two(move1, move2,self.players[self.turn % 2])
-                    self.last_move=move2
+                    
                     return
                 
                 else:
                     move0 = input("Enter your move (e.g., 'A1, A4,...'): ").strip().upper()
+                    self.last_move=move0
                     if(move0=="EXIT"):
                         self.gameOver=True
                         return
@@ -84,7 +87,7 @@ class Game:
                             self.gameOver=True
                             return
                     self.board.move_player_phase_one(move0, self.players[self.turn % 2])
-                    self.last_move=move0
+                    
                     self.pieces[(self.turn + 1) % 2]-=1
                     return
                     
