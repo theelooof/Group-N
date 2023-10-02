@@ -114,7 +114,7 @@ class Game:
                 self.pieces_on_board[(self.turn) % 2]-=1
             return
     def restart(self):
-        if(self.gameOver or self.turn>299 or self.pieces_on_board[(self.turn-1) % 2]<3 or self.turn>18 or self.pieces_on_board[self.turn % 2]<3 ):
+        if(self.gameOver or self.turn>299 or self.pieces_on_board[(self.turn-1) % 2]<3 or self.pieces_on_board[self.turn % 2]<3 ):
             restar_text = input("\n Do you want to play again yes/no \n").strip().upper()
             while(restar_text!="YES" and restar_text!="NO"):
                 restar_text = input("\n Do you want to play again yes/no \n").strip().upper()

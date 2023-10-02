@@ -340,7 +340,6 @@ def draw_millboard(self,board:MillBoard):
     print('\n'.join(board))
     
 def announce_winner(self):
-    print(self.pieces_on_board[(self.turn ) % 2])
     if(self.turn>299):
       print('\n'.join(draw_text)) 
     if(self.pieces_on_board[(self.turn ) % 2]<3):
