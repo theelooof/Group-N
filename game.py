@@ -10,7 +10,7 @@ class Game:
         self.turn = 0
         self.players = ["O", "X"]
         self.pieces=[9,9]
-        self.pieces_on_board=[0,0]
+        self.pieces_on_board=[9,9]
         self.last_move=None
     
     #Input moves for the game
@@ -18,7 +18,9 @@ class Game:
         while True:
             try:
                 #TODO: Wrong condition
-                if (self.pieces_on_board[0]==3 or self.pieces_on_board[1]==3) and self.turn>18:
+                phase_two=17
+                
+                if (self.pieces_on_board[0]==3 or self.pieces_on_board[1]==3) and self.turn>phase_two:
                     move1 = input("Choose the piece you want to move (e.g., 'A1'): ").strip().upper()
                     move2 = input("Choose the position you want to move the piece to (e.g., 'A4'): ").strip().upper()
                     if(move1=="EXIT" or move2=="EXIT"):
@@ -27,30 +29,35 @@ class Game:
                     while(not(self.board.is_valid_move_phase_three([move1, move2], self.players[self.turn % 2] ))):
                         move1 = input("Choose the piece you want to move (e.g., 'A1'): ").strip().upper()
                         move2 = input("Choose the position you want to move the piece to (e.g., 'A4'): ").strip().upper()
+                        self.last_move=move2
                         if(move1=="EXIT" or move2=="EXIT"):
                             self.gameOver=True
                             return
                     self.board.move_player_phase_three(move1, move2, self.players[self.turn % 2])
-                    self.last_move=move2
+                    
                     return
-                
-                elif self.turn>18:
+                elif self.turn>phase_two:
                     move1 = input("Choose the piece you want to move (e.g., 'A1'): ").strip().upper()
+                    next_moves= self.board.get_next_possible_moves(move1)
+                    if(not next_moves):
+                       print("all neighboring fields are occupied")
                     if(move1=="undo"):
                         return
                     if(move1=="EXIT"):
                         self.gameOver=True
                         return
-                    while(not(self.board.is_valid_move_phase_two(move1,self.players[self.turn % 2]))):
+                    while(not(self.board.is_valid_move_phase_two(move1,self.players[self.turn % 2])) or (not next_moves)):
                         move1 = input("Choose the piece you want to move (e.g., 'A1'): ").strip().upper()
                         next_moves= self.board.get_next_possible_moves(move1)
-                        print(f"Next possible moves from {move1}: {next_moves}")
-
                         if(move1=="undo"):
                             return
                         if(move1=="EXIT"):
                             self.gameOver=True
                             return
+                        elif(not next_moves):
+                            print("all neighboring fields are occupied")
+                        else:
+                            print(f"Next possible moves from {move1}: {next_moves}")
 
                     move2 = input("Choose the position you want to move the piece to (e.g., 'A4'): ").strip().upper()
                     if(move2=="EXIT"):
@@ -58,17 +65,19 @@ class Game:
                         return
                     while(not(self.board.is_valid_move_phase_two_second(move1,move2))):
                         move2 = input("Choose the position you want to move it to (e.g., 'A4'): ").strip().upper()
+                        self.last_move=move2
                         if(move2=="EXIT"):
                             self.gameOver=True
                             return
                     #TODO: Check if the move is valid and apply it to the board
                     
                     self.board.move_player_phase_two(move1, move2,self.players[self.turn % 2])
-                    self.last_move=move2
+                    
                     return
                 
                 else:
                     move0 = input("Enter your move (e.g., 'A1, A4,...'): ").strip().upper()
+                    self.last_move=move0
                     if(move0=="EXIT"):
                         self.gameOver=True
                         return
@@ -78,9 +87,8 @@ class Game:
                             self.gameOver=True
                             return
                     self.board.move_player_phase_one(move0, self.players[self.turn % 2])
-                    self.last_move=move0
+                    
                     self.pieces[(self.turn + 1) % 2]-=1
-                    self.pieces_on_board[self.turn % 2]+=1
                     return
                     
             except KeyboardInterrupt:
@@ -106,13 +114,17 @@ class Game:
                 self.pieces_on_board[(self.turn) % 2]-=1
             return
     def restart(self):
-        if(self.gameOver or self.turn>299 or (self.pieces_on_board[(self.turn-1) % 2]<3 and self.turn>18)):
+        if(self.gameOver or self.turn>299 or self.pieces_on_board[(self.turn-1) % 2]<3 or self.pieces_on_board[self.turn % 2]<3 ):
             restar_text = input("\n Do you want to play again yes/no \n").strip().upper()
+            while(restar_text!="YES" and restar_text!="NO"):
+                restar_text = input("\n Do you want to play again yes/no \n").strip().upper()
             if(restar_text=="YES"):
                 self.board= MillBoard()
                 self.gameOver = False
-                self.turn = 1
+                self.turn = 0
                 self.pieces=[9,9]
+                self.pieces_on_board=[9,9]
+                self.last_move=None
             if(restar_text=="NO"):
                 self.gameOver=True
 
@@ -120,6 +132,7 @@ class Game:
         self.board.player=self.players
         self.board.turn=self.turn
         self.board.pieces=self.pieces
+        self.board.pieces_on_board=self.pieces_on_board
     #Game loop
     def game_loop(self):
 
@@ -134,6 +147,7 @@ class Game:
                self.input_move()
                self.mill()
                draw_millboard(self,self.board)
+            self.input_game_info()
             announce_winner(self) 
             self.turn += 1
 
